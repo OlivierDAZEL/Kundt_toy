@@ -26,18 +26,18 @@ class parameter():
         self.max_value = max_value if max_value is not None else 2 * value
 
 params = {
-    'Thickness': parameter('d [cm]', 5.058, True, 1, 10),
-    'Porosity': parameter(r"$\phi$", 0.999, True),
-    'Resistivity': parameter(r'$\sigma$',9692, True),
-    'Tortuosity': parameter(r'$\alpha_\infty$',1.00, True),
-    'Viscous characteristic length': parameter(r'$\Lambda$',139, True),
-    'Thermal characteristic length': parameter(r'$\Lambda $\'"',446, True),
-    'Static thermal permeability': parameter(r'k\'$_0$',10e-10, True),
-    'Static tortuosity': parameter(r'\alpha_0$',10e-10, True),
-    'Frame density': parameter(r'$\rho_1$',30, True),
-    'Young\'s modulus': parameter(r'E',900224, True),
-    'Poisson\'s ratio': parameter(r'$\nu$',0.246, True),
-    'Loss factor': parameter(r'$\eta$',0.087, True),
+    'Thickness': parameter('d [cm]', 5.0, True, 1, 10),
+    'Porosity': parameter(r"$\phi$ $[\emptyset]$", 0.99, True, 0.8, 1.0),
+    'Resistivity': parameter(r'$\sigma \, [Ns/m4]$',9116, True,1000,50000),
+    'Tortuosity': parameter(r'$\alpha_\infty [\emptyset]$',1.00, True, 1.0, 2.0),   
+    'Viscous characteristic length': parameter(r'$\Lambda \,[\mu m]$',145, True),
+    'Thermal characteristic length': parameter(r'$\Lambda'+"'"+r' [\mu m]$',366, True),
+    'Static thermal permeability': parameter(r'k'+"'"+'$_0$'+" [$m^2$]",10e-8, True),
+    'Static tortuosity': parameter(r'$\alpha_0$ $[\emptyset]$',4/3, True,1,2),
+    'Frame density': parameter(r'$\rho_1$ $[kg/m^3]$',10, True),
+    'Young\'s modulus': parameter(r'E [Pa]',57313, True),
+    'Poisson\'s ratio': parameter(r'$\nu$ $[\emptyset]$',0.23, True),
+    'Loss factor': parameter(r'$\eta$ $[\emptyset]$',0.0978, True),
     'frequency': frequency,
     'termination_condition': 'Rigid',
     'fluid_model': 'Delany Bazley',
@@ -50,18 +50,18 @@ fig = plt.figure(figsize=(11, 8))
 ax = fig.add_axes([0.3, 0.25, 0.65, 0.4])
 
 # Indicator
-ax_indicator = fig.add_axes([0.25, 0.86, 0.18, 0.08])
+ax_indicator = fig.add_axes([0.15, 0.86, 0.18, 0.08])
 indicator_radio = RadioButtons(ax_indicator, possible_output_types)
 ax_indicator.text(0.5, 1.1, 'Indicator', ha='center', transform=ax_indicator.transAxes,
                 fontsize=11, fontweight='bold')
 
 # --- CheckButton "Abs mea" ---
 #ax_abs_mea = fig.add_axes([0.03, 0.7, 0.17, 0.05])
-ax_abs_mea = fig.add_axes([0.25, 0.825, 0.18, 0.035])
+ax_abs_mea = fig.add_axes([0.15, 0.825, 0.18, 0.035])
 check_abs_mea = CheckButtons(ax_abs_mea, ['Show measurement'], [False])
 
 # Fluid models
-ax_model_fluid = fig.add_axes([0.50, 0.76, 0.25, 0.18], facecolor='lightblue')
+ax_model_fluid = fig.add_axes([0.45, 0.76, 0.25, 0.18], facecolor='lightblue')
 model_check_fluid = CheckButtons(ax_model_fluid, possible_fluid_models, [False]*len(possible_fluid_models))
 ax_model_fluid.text(0.5, 1.05, 'Fluid phase model', ha='center',
                     transform=ax_model_fluid.transAxes, fontsize=11, fontweight='bold', color='blue')
@@ -119,7 +119,7 @@ def load_measurement():
         measurement = {'frequency': data[:, 0], 'Absorption': data[:, 1], "R": data[:, 2]+1j*data[:, 3], "Surface Impedance": data[:, 4]+1j*data[:,5]}
         return measurement
     except Exception as e:
-        print("Erreur de lecture Abs_meas.txt :", e)
+        print("Erreur de lecture meas.txt :", e)
         return None
 
 # --- Mise à jour des tracés ---

@@ -106,17 +106,21 @@ class Material():
     def champoux_allard(self, f):
         #  Champoux-Allard model for K_eq_til
         omega = 2*pi*f
-        self.omega_prime_infty = (16*Air.nu_prime)/(self.Lambda_prime**2)
-        self.F_prime_CA = sqrt(1+1j*omega/self.omega_prime_infty)
-        self.alpha_prime_til = 1+self.omega_prime_infty*self.F_prime_CA/(2*1j*omega)
-        self.K_eq_til = (Air.gamma*Air.P/self.phi)/(Air.gamma-(Air.gamma-1)/self.alpha_prime_til)
+        omega_prime_infty = (16*Air.nu_prime)/(self.Lambda_prime**2)
+        F_prime_CA = sqrt(1+1j*omega/omega_prime_infty)
+        alpha_prime_til = 1+omega_prime_infty*F_prime_CA/(2*1j*omega)
+        self.K_eq_til = (Air.gamma*Air.P/self.phi)/(Air.gamma-(Air.gamma-1)/alpha_prime_til)
 
     def lafarge(self, f):
         #  Lafarge model for K_eq_til
         omega = 2*pi*f
-        self.F_prime_CAL = sqrt(1+4j*omega*self.k0prime**2*Air.C_p*Air.rho/(self.Lambda_prime**2*self.phi**2*Air.lambda_))
-        self.alpha_prime_til = 1 - 1j*self.phi*Air.lambda_/(self.k0prime*Air.C_p*Air.rho*omega)*self.F_prime_CAL
-        self.K_eq_til = (Air.gamma*Air.P/self.phi)/(Air.gamma-(Air.gamma-1)/self.alpha_prime_til)
+        omega_0_prime = 2*self.phi*Air.nu_prime/self.k0prime
+        omega_prime_infty = (16*Air.nu_prime)/(self.Lambda_prime**2)   
+
+
+        alpha_prime_til = 1 + (omega_0_prime/(2*1j*omega))*sqrt(1+1j*omega*omega_prime_infty/(omega_0_prime**2))
+
+        self.K_eq_til = (Air.gamma*Air.P/self.phi)/(Air.gamma-(Air.gamma-1)/alpha_prime_til)
 
     def limp_parameters(self,f):
         self.rho_12 = -self.phi*Air.rho*(self.alpha_inf-1)
@@ -152,8 +156,9 @@ class Material():
 
         self.gamma_til = self.phi*(self.rho_12_til/self.rho_22_til-(1-self.phi)/self.phi)
         self.rho_s_til = self.rho_til+self.gamma_til**2*self.rho_eq_til
-        self.structural_loss = 1+1j*self.eta_s
 
+        self.structural_loss = 1+1j*self.eta_s
+        
         self.N = self.E/(2*(1+self.nu))*self.structural_loss
         self.A_hat = (self.E*self.nu)/((1+self.nu)*(1-2*self.nu))*self.structural_loss
         self.P_hat = self.A_hat+2*self.N
