@@ -17,6 +17,21 @@ from Impedance_tube import Impedance_tube, possible_output_types
 
 frequency = np.linspace(1.156250E+2, 4.323437E+3, 500)
 
+
+phi = 0.99 
+sigma = 9116
+alpha_inf = 1.00
+Lambda = 145   # Viscous characteristic length in micrometers
+Lambda_prime = 366   # Thermal characteristic length in micrometers
+k0prime = 10e-8  # Static thermal permeability in m^2
+rho_1 = 10  # Frame density in kg/m^3
+E = 57313  # Young's modulus in Pa
+nu = 0.23  # Poisson's ratio
+eta_s = 0.0978  # Loss factor
+alpha_0 = 4/3  # Static tortuosity
+
+
+
 class parameter():
     def __init__(self, symbol, value, isactive=False, min_value=None, max_value=None):
         self.symbol = symbol
@@ -25,19 +40,20 @@ class parameter():
         self.min_value = min_value if min_value is not None else 0.1 * value
         self.max_value = max_value if max_value is not None else 2 * value
 
+
 params = {
     'Thickness': parameter('d [cm]', 5.0, True, 1, 10),
-    'Porosity': parameter(r"$\phi$ $[\emptyset]$", 0.99, True, 0.8, 1.0),
-    'Resistivity': parameter(r'$\sigma \, [Ns/m4]$',9116, True,1000,50000),
-    'Tortuosity': parameter(r'$\alpha_\infty [\emptyset]$',1.00, True, 1.0, 2.0),   
-    'Viscous characteristic length': parameter(r'$\Lambda \,[\mu m]$',145, True),
-    'Thermal characteristic length': parameter(r'$\Lambda'+"'"+r' [\mu m]$',366, True),
-    'Static thermal permeability': parameter(r'k'+"'"+'$_0$'+" [$m^2$]",10e-8, True),
-    'Static tortuosity': parameter(r'$\alpha_0$ $[\emptyset]$',4/3, True,1,2),
-    'Frame density': parameter(r'$\rho_1$ $[kg/m^3]$',10, True),
-    'Young\'s modulus': parameter(r'E [Pa]',57313, True),
-    'Poisson\'s ratio': parameter(r'$\nu$ $[\emptyset]$',0.23, True),
-    'Loss factor': parameter(r'$\eta$ $[\emptyset]$',0.0978, True),
+    'Porosity': parameter(r"$\phi$ $[\emptyset]$", phi, True, 0.8, 1.0),
+    'Resistivity': parameter(r'$\sigma \, [Ns/m4]$',sigma, True,1000,50000),
+    'Tortuosity': parameter(r'$\alpha_\infty [\emptyset]$',alpha_inf, True, 1.0, 2.0),   
+    'Viscous characteristic length': parameter(r'$\Lambda \,[\mu m]$',Lambda, True),
+    'Thermal characteristic length': parameter(r'$\Lambda'+"'"+r' [\mu m]$',Lambda_prime, True),
+    'Static thermal permeability': parameter(r'k'+"'"+'$_0$'+" [$m^2$]",k0prime, True),
+    'Static tortuosity': parameter(r'$\alpha_0$ $[\emptyset]$',alpha_0, True,1,2),
+    'Frame density': parameter(r'$\rho_1$ $[kg/m^3]$',rho_1, True),
+    'Young\'s modulus': parameter(r'E [Pa]',E, True),
+    'Poisson\'s ratio': parameter(r'$\nu$ $[\emptyset]$',nu, True),
+    'Loss factor': parameter(r'$\eta$ $[\emptyset]$',eta_s, True),
     'frequency': frequency,
     'termination_condition': 'Rigid',
     'fluid_model': 'Delany Bazley',
@@ -104,7 +120,9 @@ laum_ax.imshow(laum_img)
 # Initial state
 model_check_fluid.set_active(2)
 model_check_solid.set_active(0)
-indicator_radio.set_radio_props({"color": ["black", "black", "black",]})
+
+
+
 
 
 # --- Fonction de chargement des données mesurées ---
